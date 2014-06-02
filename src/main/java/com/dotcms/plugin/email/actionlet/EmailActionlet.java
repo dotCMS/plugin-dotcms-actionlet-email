@@ -52,7 +52,7 @@ public class EmailActionlet extends WorkFlowActionlet {
 
 	@Override
 	public String getName() {
-		return "Send a Custom Email";
+		return "Send an Email";
 	}
 
 	@Override
