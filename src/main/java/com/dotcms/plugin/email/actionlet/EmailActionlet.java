@@ -43,6 +43,8 @@ public class EmailActionlet extends WorkFlowActionlet {
 		params.add(new WorkflowActionletParameter("fromName", "From Name", "", true));
 		params.add(new WorkflowActionletParameter("toEmail", "To Email", "", true));
 		params.add(new WorkflowActionletParameter("toName", "To Name", "", true));
+		params.add(new WorkflowActionletParameter("cc", "Cc Email", "", false));
+		params.add(new WorkflowActionletParameter("bcc", "Bcc Email", "", false));
 		params.add(new WorkflowActionletParameter("emailSubject", "Email Subject", "", true));
 		params.add(new WorkflowActionletParameter("emailBody", "Email Body (html)", "", true));
 		params.add(new WorkflowActionletParameter("attachment", "Path to File Attachment or field var for attachment (e.g./images/logo.png or 'fileAsset')", "", false));
@@ -81,8 +83,8 @@ public class EmailActionlet extends WorkFlowActionlet {
 		String emailSubject = params.get("emailSubject").getValue();
 		String emailBody = params.get("emailBody").getValue();
 		String attachment = params.get("attachment").getValue();
-		
-		
+		String cc = params.get("cc").getValue();
+		String bcc = params.get("bcc").getValue();
 		
 
 		try {
@@ -150,6 +152,19 @@ public class EmailActionlet extends WorkFlowActionlet {
 			mail.setSubject(emailSubject);
 
 			mail.setHTMLAndTextBody(emailBody);
+			
+			
+			if(UtilMethods.isSet(cc)){
+				cc = VelocityUtil.eval(cc, ctx);
+				mail.setCc(cc);
+			}
+			if(UtilMethods.isSet(bcc)){
+				bcc = VelocityUtil.eval(bcc, ctx);
+				mail.setBcc(bcc);
+			}
+			
+			
+			
 			if (UtilMethods.isSet(attachment)) {
 				File f = null;
 				try {
