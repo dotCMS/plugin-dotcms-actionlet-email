@@ -45,7 +45,7 @@ public class EmailActionlet extends WorkFlowActionlet {
 		params.add(new WorkflowActionletParameter("toName", "To Name", "", true));
 		params.add(new WorkflowActionletParameter("emailSubject", "Email Subject", "", true));
 		params.add(new WorkflowActionletParameter("emailBody", "Email Body (html)", "", true));
-		params.add(new WorkflowActionletParameter("attachment", "Path to File Attachment (e.g./images/logo.png)", "", false));
+		params.add(new WorkflowActionletParameter("attachment", "Path to File Attachment or field var for attachment (e.g./images/logo.png or 'fileAsset')", "", false));
 
 		return params;
 	}
@@ -120,13 +120,25 @@ public class EmailActionlet extends WorkFlowActionlet {
 			ctx.put("contentlet", c);
 			ctx.put("content", c);
 
-			toEmail = VelocityUtil.eval(toEmail, ctx);
-			toName = VelocityUtil.eval(toName, ctx);
-			fromEmail = VelocityUtil.eval(fromEmail, ctx);
-			fromName = VelocityUtil.eval(fromName, ctx);
-			emailSubject = VelocityUtil.eval(emailSubject, ctx);
-			emailBody = VelocityUtil.eval(emailBody, ctx);
-			attachment = VelocityUtil.eval(attachment, ctx);
+			if(UtilMethods.isSet(toEmail)){
+				toEmail = VelocityUtil.eval(toEmail, ctx);
+			}
+			if(UtilMethods.isSet(toName)){
+				toName = VelocityUtil.eval(toName, ctx);
+			}
+			if(UtilMethods.isSet(fromEmail)){
+				fromEmail = VelocityUtil.eval(fromEmail, ctx);
+			}
+
+			if(UtilMethods.isSet(fromName)){
+				fromName = VelocityUtil.eval(fromName, ctx);
+			}
+			if(UtilMethods.isSet(emailSubject)){
+				emailSubject = VelocityUtil.eval(emailSubject, ctx);
+			}
+			if(UtilMethods.isSet(emailBody)){
+				emailBody = VelocityUtil.eval(emailBody, ctx);
+			}
 
 			Mailer mail = new Mailer();
 
