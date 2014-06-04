@@ -1,4 +1,4 @@
-plugin-dotcms-email - Dotcms 2.5
+plugin-dotcms-email 
 =====================
 
 This plugin provides a Workflow Actionlet that can be used to send arbitrary emails to a user or users.  Coupling this plugin with some of the more advanced workflow features and you can build automated responders, timed responses and even user triggers automatic follow up emails that are customized to the data you have collected in the form submittal
@@ -7,7 +7,7 @@ Every field in the email can contain velocity and can access the submitted conte
 
 The attachment field can work 2 ways.  You can pass it a path, such as "/images/logo.png" and it will include the file on that path, or you can pass it the velocity variable for a field on the submitted content - this will attach the associated content to the email.
 
-
+This was written for Dotcms 2.5 
 Please make sure the following entries are in your OSGI exported packages file
 
 ```
