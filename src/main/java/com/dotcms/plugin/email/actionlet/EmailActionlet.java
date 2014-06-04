@@ -13,7 +13,7 @@ import javax.mail.internet.InternetAddress;
 import com.dotmarketing.beans.Host;
 import com.dotmarketing.beans.Identifier;
 import com.dotmarketing.business.APILocator;
-import com.dotmarketing.business.Versionable;
+import com.dotmarketing.business.web.WebAPILocator;
 import com.dotmarketing.cmis.proxy.DotInvocationHandler;
 import com.dotmarketing.cmis.proxy.DotRequestProxy;
 import com.dotmarketing.cmis.proxy.DotResponseProxy;
@@ -178,13 +178,24 @@ public class EmailActionlet extends WorkFlowActionlet {
 				String attachment = params.get("attachment" + x).getValue();
 				
 				if (UtilMethods.isSet(attachment)) {
+					Host fileHost = host;
 					File f = null;
 					try {
 						if(attachment.indexOf("/") == -1 && processor.getContentlet().getBinary(attachment).exists()){
 							f = processor.getContentlet().getBinary(attachment);
 						}
 						else{
-							Identifier id = APILocator.getIdentifierAPI().find(host, attachment);
+							String hostname = attachment;
+							String filename = attachment;
+							if(hostname.startsWith("//")){
+								hostname = hostname.substring(2,hostname.length());
+								filename = hostname.substring(hostname.indexOf("/"), hostname.length());
+								hostname = hostname.substring(0,hostname.indexOf("/"));
+								fileHost = WebAPILocator.getHostWebAPI().resolveHostName(hostname, processor.getUser(), true); 	
+								
+							}
+
+							Identifier id = APILocator.getIdentifierAPI().find(fileHost, filename);
 							ContentletVersionInfo vinfo = APILocator.getVersionableAPI().getContentletVersionInfo(id.getId(),processor.getContentlet().getLanguageId());
 							Contentlet cont = APILocator.getContentletAPI().find(vinfo.getLiveInode(), processor.getUser(), true);
 							FileAsset fileAsset = APILocator.getFileAssetAPI().fromContentlet(cont);
