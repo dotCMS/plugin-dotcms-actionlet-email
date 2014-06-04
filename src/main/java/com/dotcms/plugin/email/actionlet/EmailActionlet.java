@@ -47,8 +47,19 @@ public class EmailActionlet extends WorkFlowActionlet {
 		params.add(new WorkflowActionletParameter("bcc", "Bcc Email", "", false));
 		params.add(new WorkflowActionletParameter("emailSubject", "Email Subject", "", true));
 		params.add(new WorkflowActionletParameter("emailBody", "Email Body (html)", "", true));
-		params.add(new WorkflowActionletParameter("attachment", "Path to File Attachment or field var for attachment (e.g./images/logo.png or 'fileAsset')", "", false));
+		params.add(new WorkflowActionletParameter("attachment1", 
+				"Path or field for attachment <br>(e.g./images/logo.png or 'fileAsset')", "", false));
+		params.add(new WorkflowActionletParameter("attachment2", 
+				"Path or field for attachment <br>(e.g./images/logo.png or 'fileAsset')", "", false));
+		params.add(new WorkflowActionletParameter("attachment3", 
+				"Path or field for attachment <br>(e.g./images/logo.png or 'fileAsset')", "", false));
+		params.add(new WorkflowActionletParameter("attachment4", 
+				"Path or field for attachment <br>(e.g./images/logo.png or 'fileAsset')", "", false));
+		params.add(new WorkflowActionletParameter("attachment5", 
+				"Path or field for attachment <br>(e.g./images/logo.png or 'fileAsset')", "", false));
 
+		
+		
 		return params;
 	}
 
@@ -82,7 +93,7 @@ public class EmailActionlet extends WorkFlowActionlet {
 		String fromName = params.get("fromName").getValue();
 		String emailSubject = params.get("emailSubject").getValue();
 		String emailBody = params.get("emailBody").getValue();
-		String attachment = params.get("attachment").getValue();
+
 		String cc = params.get("cc").getValue();
 		String bcc = params.get("bcc").getValue();
 		
@@ -163,26 +174,28 @@ public class EmailActionlet extends WorkFlowActionlet {
 				mail.setBcc(bcc);
 			}
 			
-			
-			
-			if (UtilMethods.isSet(attachment)) {
-				File f = null;
-				try {
-					if(attachment.indexOf("/") == -1 && processor.getContentlet().getBinary(attachment).exists()){
-						f = processor.getContentlet().getBinary(attachment);
+			for(int x =1;x<6;x++){
+				String attachment = params.get("attachment" + x).getValue();
+				
+				if (UtilMethods.isSet(attachment)) {
+					File f = null;
+					try {
+						if(attachment.indexOf("/") == -1 && processor.getContentlet().getBinary(attachment).exists()){
+							f = processor.getContentlet().getBinary(attachment);
+						}
+						else{
+							Identifier id = APILocator.getIdentifierAPI().find(host, attachment);
+							ContentletVersionInfo vinfo = APILocator.getVersionableAPI().getContentletVersionInfo(id.getId(),processor.getContentlet().getLanguageId());
+							Contentlet cont = APILocator.getContentletAPI().find(vinfo.getLiveInode(), processor.getUser(), true);
+							FileAsset fileAsset = APILocator.getFileAssetAPI().fromContentlet(cont);
+							f = fileAsset.getFileAsset();
+						}
+						if(f!=null && f.exists()){
+							mail.addAttachment(f);
+						}
+					} catch (Exception e) {
+						Logger.error(this.getClass(), "Unable to get file attachment: " + e.getMessage());
 					}
-					else{
-						Identifier id = APILocator.getIdentifierAPI().find(host, attachment);
-						ContentletVersionInfo vinfo = APILocator.getVersionableAPI().getContentletVersionInfo(id.getId(),processor.getContentlet().getLanguageId());
-						Contentlet cont = APILocator.getContentletAPI().find(vinfo.getLiveInode(), processor.getUser(), true);
-						FileAsset fileAsset = APILocator.getFileAssetAPI().fromContentlet(cont);
-						f = fileAsset.getFileAsset();
-					}
-					if(f!=null && f.exists()){
-						mail.addAttachment(f);
-					}
-				} catch (Exception e) {
-					Logger.error(this.getClass(), "Unable to get file attachment: " + e.getMessage());
 				}
 			}
 
