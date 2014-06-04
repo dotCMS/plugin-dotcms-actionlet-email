@@ -1,4 +1,4 @@
-plugin-dotcms-email
+plugin-dotcms-email - Dotcms 2.5
 =====================
 
 This plugin provides a Workflow Actionlet that can be used to send arbitrary emails to a user or users.  Coupling this plugin with some of the more advanced workflow features and you can build automated responders, timed responses and even user triggers automatic follow up emails that are customized to the data you have collected in the form submittal
