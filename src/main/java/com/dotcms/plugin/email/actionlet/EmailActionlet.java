@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
+import org.apache.chemistry.opencmis.server.support.query.TextSearchParser.word_return;
+
 import com.dotmarketing.beans.Host;
 import com.dotmarketing.beans.Identifier;
 import com.dotmarketing.business.APILocator;
@@ -47,6 +49,8 @@ public class EmailActionlet extends WorkFlowActionlet {
 		params.add(new WorkflowActionletParameter("bcc", "Bcc Email", "", false));
 		params.add(new WorkflowActionletParameter("emailSubject", "Email Subject", "", true));
 		params.add(new WorkflowActionletParameter("emailBody", "Email Body (html)", "", true));
+		params.add(new WorkflowActionletParameter("condition", 
+				"Condition - email will send unless<br>velocity prints 'false'", "", false));
 		params.add(new WorkflowActionletParameter("attachment1", 
 				"Path or field for attachment <br>(e.g./images/logo.png or 'fileAsset')", "", false));
 		params.add(new WorkflowActionletParameter("attachment2", 
@@ -93,7 +97,7 @@ public class EmailActionlet extends WorkFlowActionlet {
 		String fromName = params.get("fromName").getValue();
 		String emailSubject = params.get("emailSubject").getValue();
 		String emailBody = params.get("emailBody").getValue();
-
+		String condition = params.get("condition").getValue();
 		String cc = params.get("cc").getValue();
 		String bcc = params.get("bcc").getValue();
 		
@@ -133,6 +137,17 @@ public class EmailActionlet extends WorkFlowActionlet {
 			ctx.put("contentlet", c);
 			ctx.put("content", c);
 
+			
+			
+			if(UtilMethods.isSet(condition)){
+				condition = VelocityUtil.eval(condition, ctx);
+				if(UtilMethods.isSet(condition) && condition.indexOf("false")>-1){
+					Logger.info(this.getClass(), processor.getAction().getName()  + " email condition contains false, skipping email send");
+					return;
+				}
+			}
+			
+			
 			if(UtilMethods.isSet(toEmail)){
 				toEmail = VelocityUtil.eval(toEmail, ctx);
 			}
