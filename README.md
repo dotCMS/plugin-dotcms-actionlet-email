@@ -7,7 +7,7 @@ Every field in the email can contain velocity and can access the submitted conte
 
 The attachment field can work 2 ways.  You can pass it a path, such as "/images/logo.png" and it will include the file on that path, or you can pass it the velocity variable for a field on the submitted content - this will attach the associated content to the email.
 
-This was written for Dotcms 2.5 
+This was written for Dotcms 2.5 it will be baked into 3.0
 
 Please make sure the following entries are in your OSGI exported packages file
 
