@@ -12,6 +12,7 @@ This was written for Dotcms 2.5
 Please make sure the following entries are in your OSGI exported packages file
 
 ```
+com.dotmarketing.business.web,
 com.dotmarketing.portlets.workflows.actionlet,
 org.apache.velocity.context,
 com.dotmarketing.beans,
