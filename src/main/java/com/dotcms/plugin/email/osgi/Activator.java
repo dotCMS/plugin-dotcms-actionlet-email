@@ -1,6 +1,6 @@
 package com.dotcms.plugin.email.osgi;
 
-import org.osgi.framework.BundleContext;
+import com.dotcms.repackage.org.osgi.framework.BundleContext;
 
 import com.dotcms.plugin.email.actionlet.EmailActionlet;
 import com.dotmarketing.osgi.GenericBundleActivator;

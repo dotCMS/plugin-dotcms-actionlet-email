@@ -10,8 +10,6 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
-import org.apache.chemistry.opencmis.server.support.query.TextSearchParser.word_return;
-
 import com.dotmarketing.beans.Host;
 import com.dotmarketing.beans.Identifier;
 import com.dotmarketing.business.APILocator;
